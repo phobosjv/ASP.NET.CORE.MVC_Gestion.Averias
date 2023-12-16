@@ -1,0 +1,136 @@
+﻿@model Incidencia
+
+@{
+    ViewData["Title"] = "Nueva Avería";
+
+
+    Oficina oficina = ViewBag.oficina;
+    string oficinaId = (ViewBag.oficina != null ? ViewBag.oficina.Id.ToString() : "");
+
+    Dispositivo dispositivo = ViewBag.dispositivo;
+    string dispositivoId = (ViewBag.dispositivo != null ? ViewBag.dispositivo.Id.ToString() : "");
+
+    Tecnico tecnico = ViewBag.tecnico;
+    string tecnicoId = (ViewBag.tecnico != null ? ViewBag.tecnico.Id.ToString() : "");
+
+    TipoDispositivo tipoDispositivo = ViewBag.tipoDispositivo;
+    string tipoDispositivoId = (ViewBag.tipoDispositivo != null ? ViewBag.tipoDispositivo.Id.ToString() : "");
+
+    ModeloDispositivo modeloDispositivo = ViewBag.modeloDispositivo;
+    string modeloDispositivoId = (ViewBag.modeloDispositivo != null ? ViewBag.modeloDispositivo.Id.ToString() : "");
+
+    string asunto = ViewBag.asunto ?? "";
+    string texto = ViewBag.texto ?? "";
+}
+
+<h2>Crear Avería: Completar Datos</h2>
+
+<div class="d-flex justify-content-evenly mb-2">
+    <div class="d-flex mt-2 mb-2">
+        <strong>Centro: </strong>&nbsp;@(Context.Request.Method == "GET" ? oficina.Codigo : "-")
+    </div>
+    <div class="d-flex mt-2 mb-2">
+        <strong>Tipo: </strong>&nbsp;@(Context.Request.Method == "GET" ? tipoDispositivo.Titulo : "-")
+    </div>
+    <div class="d-flex mt-2 mb-2">
+        <strong>Modelo: </strong>&nbsp;@(Context.Request.Method == "GET" ? modeloDispositivo.Marca + " - " + modeloDispositivo.Modelo : "-")
+    </div>
+    <div class="d-flex mt-2 mb-2">
+        <strong>S/N: </strong>&nbsp;@(Context.Request.Method == "GET" ? dispositivo.NumeroSerie : "-")
+    </div>
+    <div class="d-flex mt-2 mb-2">
+        <strong>Técnico: </strong>&nbsp;@(Context.Request.Method == "GET" ? tecnico.NombreEmpresa : "-")
+    </div>
+</div>
+
+@* <h5>Detallar avería:</h5> *@
+
+@*Animación de Carga*@
+<div class="loading" align="center">
+    <div class="hourglass"></div>
+</div>
+
+<div class="d-flex justify-content-center">
+    <div style="width: 600px">
+        <form id="miFormulario" asp-action="Crear_Registrar">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div style="display: none;">
+                <div class="mb-3">
+                    <label asp-for="FechaHora" class="form-label"></label>
+                    <input id="fechaHora" asp-for="FechaHora" class="form-control" />
+                    <span asp-validation-for="FechaHora" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Usuario" class="form-label"></label>
+                    <input id="usuario" asp-for="Usuario" class="form-control" />
+                    <span asp-validation-for="Usuario" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="OficinaId" class="form-label"></label>
+                    <input id="oficinaId" asp-for="OficinaId" class="form-control" />
+                    <span asp-validation-for="OficinaId" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="DispositivoId" class="form-label"></label>
+                    <input id="dispositivoId" asp-for="DispositivoId" class="form-control" />
+                    <span asp-validation-for="DispositivoId" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="TecnicoId" class="form-label"></label>
+                    <input id="tecnicoId" asp-for="TecnicoId" class="form-control" />
+                    <span asp-validation-for="TecnicoId" class="text-danger"></span>
+                </div>
+            </div>
+
+            <p><span class="col-form-label"><strong>Asunto:</strong></span>&nbsp;<span class="form-control">@asunto</span></p>
+
+            <div class="col-4">
+                <strong><label asp-for="Descripcion"></label>:</strong>
+            </div>
+            <div class="col-8 mb-4">
+                <textarea id="textDescripcion" style="width: 600px; height:250px;" asp-for="Descripcion" class="form-control">Insertar Texto Aquí</textarea>
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+
+            <button class="btn btn-success" formmethod="post" onmousedown="ShowProgress()">Guardar</button>
+            <a class="btn btn-secondary" asp-action="Index">Cancelar</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        
+        var textDescripcion = document.getElementById('textDescripcion');
+        var fechaHora = document.getElementById('fechaHora');
+        var oficinaId = document.getElementById('oficinaId');
+        var dispositivoId = document.getElementById('dispositivoId');
+        var TecnicoId = document.getElementById('tecnicoId');
+        var usuario = document.getElementById('usuario');
+        // var hoy = new Date();
+        // var dia = hoy.getFullYear() + '-' + hoy.getMonth() + '-' + hoy.getDay();
+
+        window.onload = function () {
+            // Si hay parámetros en la URL, es probable que sea una solicitud GET
+            if (window.location.href.indexOf('?') !== -1) {
+                textDescripcion.innerHTML = '@texto';
+                fechaHora.value = '@DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")';
+                oficinaId.value = '@oficinaId';
+                dispositivoId.value = '@dispositivoId';
+                TecnicoId.value = '@tecnicoId';
+                usuario.value = '@User.Identity.Name';
+            }
+            setTimeout(function () {
+                document.body.removeChild(modal);
+                loading.style.display = "none";
+            }, 100); //Poner a 1000 si se quiere aumentar el tiempo en un segundo.
+        };
+
+        
+    </script>
+
+}

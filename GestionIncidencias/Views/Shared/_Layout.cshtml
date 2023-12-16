@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - GestionIncidencias</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/loading/css/loading.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/GestionIncidencias.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/data-tables/css/cdn.datatables.net_1.13.6_css_jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="~/lib/toastr/css/toastr.min.css" />
+    @* <link rel="stylesheet" href="~/lib/sweetalert/css/sweetalert2.min.css"> *@
+    @*Sección para las hojas de estilo*@
+    @await RenderSectionAsync("Estilos", required: false)
+</head>
+<body>
+    <header>
+        <nav class="mb-3 navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow">
+            <div class="container-fluid">
+                <a style="font-size: xx-large; font-weight: bold;" class="navbar-brand" asp-controller="Home" asp-action="Index">
+                    Gestión Averías <span style="font-size: medium; font-weight: normal;"
+                                          title="@File.ReadAllText(AppContext.BaseDirectory + "NotasVersion.txt");">
+                        @File.ReadLines(AppContext.BaseDirectory + "NotasVersion.txt").FirstOrDefault()
+                    </span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a style="font-weight: bold; width: 120px;" class="ms-1 me-1 @(ViewContext.View.Path.Contains("/Home") ||
+                                                                        ViewContext.View.Path.Contains("/Calendario") ||
+                                                                        ViewContext.View.Path.Contains("/Exportar") ?
+                                                                        "btn btn-success" : "btn btn-secondary")" asp-controller="Home" asp-action="Index">Avisos</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <strong>
+                                <a style="font-weight: bold; width: 120px;" class="ms-1 me-1 @(ViewContext.View.Path.Contains("/Dispositivos") ||
+                                                                        ViewContext.View.Path.Contains("/TiposDispositivos") ||
+                                                                        ViewContext.View.Path.Contains("/ModelosDispositivos") ?
+                                                                        "btn btn-success" : "btn btn-secondary")"
+                                   asp-controller="Dispositivos" asp-action="Index">Dispositivos</a>
+                            </strong>
+                        </li>
+
+                        <li class="nav-item">
+                            <strong>
+                                <a style="font-weight: bold; width: 120px;" class="ms-1 me-1 @(ViewContext.View.Path.Contains("/Tecnicos") ? "btn btn-success" : "btn btn-secondary")"
+                                   asp-controller="Tecnicos" asp-action="Index">Técnicos</a>
+                            </strong>
+                        </li>
+
+                        <li class="nav-item">
+                            <strong>
+                                <a style="font-weight: bold; width: 120px;" class="ms-1 me-1 @(ViewContext.View.Path.Contains("/Oficinas") ? "btn btn-success" : "btn btn-secondary")"
+                                   asp-controller="Oficinas" asp-action="Index">Oficinas</a>
+                            </strong>
+                        </li>
+
+                        @if (User.IsInRole(Constantes.RolAdmin))
+                        {
+                            <li class="nav-item">
+                                <strong>
+                                    <a style="font-weight: bold; width: 120px;" class="ms-1 me-1 @(ViewContext.View.Path.Contains("/Usuarios") ? "btn btn-success" : "btn btn-secondary")"
+                                       asp-controller="Usuarios" asp-action="Listado">Usuarios</a>
+                                </strong>
+                            </li>
+                        }
+
+                    </ul>
+                    <partial name="_LinksLogin" />
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            2023 - Francisco Javier Sánchez Gragera
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/loading/js/loading.js" asp-append-version="true"></script>
+    <script src="~/lib/data-tables/js/cdn.datatables.net_1.13.6_js_jquery.dataTables.min.js"></script>
+    <script src="~/lib/data-tables/js/code.jquery.com_jquery-3.7.0.js"></script>
+    <script src="~/lib/toastr/js/toastr.min.js"></script>
+    @* <script src="~/lib/sweetalert/js/sweetalert2.all.min.js"></script> *@
+    <script>
+        toastr.options = {
+            positionClass: 'toast-bottom-right', // Esta opción posiciona el mensaje en la esquina inferior derecha
+            closeButton: false // Puedes mostrar un botón de cierre en el mensaje si lo deseas
+        };
+
+        // Refrescar Tabla al redimensionar ventana
+        $(window).resize(function () {
+            $(".sorting").width(""); //This is the class it sets to each < th >
+            $(".tablaRedimensionable").width("100%"); //Class I set to the table for  this. An id won't work.
+            $(".dataTables_scrollHeadInner").width("100%"); // Class of div added by DataTables, contains the header table.
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

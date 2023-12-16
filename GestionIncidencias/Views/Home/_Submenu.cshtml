@@ -1,0 +1,25 @@
+﻿@model SubMenuIncidencias
+<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <div class="container-fluid">
+        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+            <ul class="navbar-nav flex-grow-1">
+                <li class="nav-item">
+                    <a style="font-weight: bold; width: 120px;" class="ms-1 me-1 @(Model == SubMenuIncidencias.Incidencias ? "btn btn-success" : "btn btn-secondary")"
+                       asp-action="Index" asp-controller="Home">Lista</a>
+                </li>
+                <li class="nav-item">
+                    <a style="font-weight: bold; width: 120px;" class="ms-1 me-1 @(Model == SubMenuIncidencias.Calendario ? "btn btn-success" : "btn btn-secondary")"
+                       asp-action="Index" asp-controller="Calendario">Calendario</a>
+                </li>
+                <li class="nav-item">
+                    <a style="font-weight: bold; width: 120px;" class="ms-1 me-1 @(Model == SubMenuIncidencias.Graficos ? "btn btn-success" : "btn btn-secondary")"
+                       asp-action="Index" asp-controller="Graficos">Gráficos</a>
+                </li>
+                <li class="nav-item">
+                    <a style="font-weight: bold; width: 120px;" class="ms-1 me-1 @(Model == SubMenuIncidencias.Exportar ? "btn btn-success" : "btn btn-secondary")"
+                       asp-action="Index" asp-controller="Exportar">Exportar</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

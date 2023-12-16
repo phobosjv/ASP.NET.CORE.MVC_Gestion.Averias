@@ -1,0 +1,21 @@
+﻿@model SubMenuDispositivos
+<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <div class="container-fluid">
+        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+            <ul class="navbar-nav flex-grow-1">
+                <li class="nav-item">
+                    <a style="font-weight: bold; width: 120px;" class="ms-1 me-1 @(Model == SubMenuDispositivos.Dispositivos ? "btn btn-success" : "btn btn-light")"
+                       asp-action="Index" asp-controller="Dispositivos">Lista</a>
+                </li>
+                <li class="nav-item">
+                    <a style="font-weight: bold; width: 120px;" class="ms-1 me-1 @(Model == SubMenuDispositivos.TiposDispositivos ? "btn btn-success" : "btn btn-light")"
+                       asp-action="Index" asp-controller="TiposDispositivos">Tipos</a>
+                </li>
+                <li class="nav-item">
+                    <a style="font-weight: bold; width: 120px;" class="ms-1 me-1 @(Model == SubMenuDispositivos.ModelosDispositivos ? "btn btn-success" : "btn btn-light")"
+                       asp-action="Index" asp-controller="ModelosDispositivos">Modelos</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

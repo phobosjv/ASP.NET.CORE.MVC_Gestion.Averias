@@ -1,0 +1,97 @@
+﻿@model UsuariosListadoViewModel
+
+@{
+    ViewData["Title"] = "Listado de usuarios";
+    Layout = "../shared/_Layout";
+}
+
+<h2>Listado de Usuarios</h2>
+
+@*Animación de Carga*@
+<div class="loading" style="text-align: center;">
+    <div class="hourglass"></div>
+</div>
+
+@if (Model.Usuarios is not null)
+{
+    <form method="post">
+        <table summary="Tabla Usuarios" id="tablaUsuarios" class="table table-hover tablaRedimensionable">
+            <thead>
+                <tr>
+                    <th>Acción</th>
+                    <th>Usuario</th>
+                    <th>Email</th>
+                    <th>Activado</th>
+                    <th>Permisos</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var usuario in Model.Usuarios)
+                {
+                    <tr>
+                        <td>
+                            @if (usuario.Permisos.Contains("admin"))
+                            {
+                                <button style="width: 130px;" class="btn btn-sm btn-secondary me-2" asp-action="QuitarAdmin" asp-route-NombreUsuario="@usuario.NombreUsuario">
+                                    Quitar Admin
+                                </button>
+                            }
+                            else
+                            {
+                                <button style="width: 130px;" class="btn btn-sm btn-success me-2" asp-action="HacerAdmin" asp-route-NombreUsuario="@usuario.NombreUsuario">
+                                    Hacer Admin
+                                </button>
+                            }
+
+                            @if (usuario.Activado)
+                            {
+                                <button style="width: 130px;" class="btn btn-sm btn-danger me-2" asp-action="Desactivar" asp-route-NombreUsuario="@usuario.NombreUsuario">
+                                    Desactivar
+                                </button>
+                            }
+                            else
+                            {
+                                <button style="width: 130px;" class="btn btn-sm btn-success me-2" asp-action="Activar" asp-route-NombreUsuario="@usuario.NombreUsuario">
+                                    Activar
+                                </button>
+                            }
+                        </td>
+                        <td>
+                            @usuario.NombreUsuario
+                        </td>
+                        <td>
+                            @usuario.Email
+                        </td>
+                        <td>
+                            @(usuario.Activado ? "Si" : "No")
+                        </td>
+                        <td>
+                            @usuario.Permisos
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </form>
+}
+else
+{
+    <p>No se encontraron usuarios dados de alta</p>
+}
+
+@*DataTables*@
+@section Scripts{
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const mensaje = urlParams.get("mensaje");
+        if (mensaje !== null) {
+            toastr.success(mensaje);
+        }
+        new DataTable('#tablaUsuarios', {
+            language: {
+                url: '/lib/data-tables/json/es-ES.json'
+            },
+            order: [[3, 'desc']]
+        });
+    </script>
+}

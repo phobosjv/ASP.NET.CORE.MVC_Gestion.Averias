@@ -1,0 +1,109 @@
+﻿@model Incidencia
+
+@{
+    ViewData["Title"] = "Reclamar Avería";
+
+
+    Oficina oficina = ViewBag.oficina;
+
+    Dispositivo dispositivo = Model.Dispositivo;
+
+    Tecnico tecnico = ViewBag.tecnico;
+
+    ModeloDispositivo modeloDispositivo = ViewBag.modeloDispositivo;
+
+    TipoDispositivo tipoDispositivo = ViewBag.tipoDispositivo;
+
+    string asunto = "RECLAMAR: " + tecnico.Asunto.Replace("[CENTRO]", oficina.Codigo)
+                                    .Replace("[TIPO]", tipoDispositivo.Titulo)
+                                    .Replace("[SN]", dispositivo.NumeroSerie)
+                                    .Replace("[MODELO]", modeloDispositivo.Marca + " - " + modeloDispositivo.Modelo);
+
+}
+
+<h2>¿Seguro que desea reclamar la avería?</h2>
+<h5>Las averías deben reclamarse si no han sido atendidas, o si tras acudir el técnico el dispositivo sigue fallando (por el mismo motivo, o a consecuencia de la intervención).</h5>
+
+<div class="d-flex justify-content-evenly mb-2">
+    <div class="d-flex mt-2 mb-2">
+        <strong>Centro: </strong>&nbsp;@oficina.Codigo
+    </div>
+    <div class="d-flex mt-2 mb-2">
+        <strong>Tipo: </strong>&nbsp;@tipoDispositivo.Titulo
+    </div>
+    <div class="d-flex mt-2 mb-2">
+        <strong>Modelo: </strong>&nbsp;@modeloDispositivo.Marca - @modeloDispositivo.Modelo
+    </div>
+    <div class="d-flex mt-2 mb-2">
+        <strong>S/N: </strong>&nbsp;@dispositivo.NumeroSerie
+    </div>
+</div>
+
+<div class="d-flex justify-content-evenly mb-2">
+    <div class="d-flex mt-2 mb-2">
+        <strong>Técnico: </strong>&nbsp;@tecnico.NombreEmpresa
+    </div>
+    <div class="d-flex mt-2 mb-2">
+        <strong>Usuario: </strong>&nbsp;@Model.Usuario
+    </div>
+    <div class="d-flex mt-2 mb-2">
+        <strong>Fecha/Hora: </strong>&nbsp;@Model.FechaHora.ToString("dd/MM/yyyy HH:mm")
+    </div>
+
+</div>
+
+@*Animación de Carga*@
+<div class="loading" style="text-align: center;">
+    <div class="hourglass"></div>
+</div>
+
+<div class="d-flex justify-content-center">
+    <div style="width: 600px">
+        <form id="miFormulario" asp-action="PreReclamar">
+
+            <div style="display: none;">
+                <div class="mb-3">
+                    <input type="hidden" asp-for="Id" class="form-control" />
+                    <input type="hidden" asp-for="FechaHora" class="form-control" />
+                    <input type="hidden" asp-for="Usuario" class="form-control" />
+                    <input type="hidden" asp-for="OficinaId" class="form-control" />
+                    <input type="hidden" asp-for="DispositivoId" class="form-control" />
+                    <input type="hidden" asp-for="TecnicoId" class="form-control" />
+                </div>
+            </div>
+
+            <p><span class="col-form-label"><strong>Asunto:</strong></span>&nbsp;<span class="form-control">@asunto</span></p>
+
+            <div class="col-4">
+                <strong><label asp-for="Descripcion"></label>:</strong>
+            </div>
+            <div class="col-8 mb-4">
+                <textarea id="textDescripcion" style="width: 600px; height:250px; background-color: white; " asp-for="Descripcion" class="form-control"></textarea>
+            </div>
+
+            <button class="btn btn-success" formmethod="post" onmousedown="ShowProgress()">Reclamar Avería</button>
+            <a class="btn btn-secondary" asp-action="Index">Volver al Listado</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script>
+
+        var textDescripcion = document.getElementById('textDescripcion');
+
+        window.onload = function () {
+            setTimeout(function () {
+                document.body.removeChild(modal);
+                loading.style.display = "none";
+                textDescripcion.innerHTML = 'Por favor, RECLAMAR la avería adjunta con fecha @Model.FechaHora.ToString("dd/MM/yyyy HH:mm")&#13; ' +
+                    'MOTIVO: &#13;&#13;' +
+                    '------------------- Mensaje Original ----------------------&#13;&#13; ' + textDescripcion.innerHTML +
+                    '----------------------------------------------------------------&#13; Muchas gracias, un saludo.&#13;&#13;';
+            }, 100); //Poner a 1000 si se quiere aumentar el tiempo en un segundo.
+
+        }
+    </script>
+
+}

@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - GestionIncidencias</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/GestionIncidencias.styles.css" asp-append-version="true" />
+
+    <!-- Iconos Bootstrap-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+<body style="margin: 0">
+    <div style="display: flex; justify-content: center; align-items: center; height: 100vh">
+        <div class="text-center" style="margin-right: 5rem;">
+            <h1>Gestión Incidencias Dispositivos</h1>
+            <h2>Dpto. Sistemas y Comunicaciones</h2>
+            <h4>Caja Rural de Jaén, Barcelona y Madrid</h4>
+            <div class="text-center">
+                <img src="~/images/espiga.svg" class="img-fluid m-5 " alt="logotipo">
+            </div>
+        </div>
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

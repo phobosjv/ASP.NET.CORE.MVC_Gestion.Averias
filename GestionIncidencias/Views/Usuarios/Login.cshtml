@@ -1,0 +1,66 @@
+﻿@model LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<!-- Parte Visual del Formulario de Login -->
+
+
+<h2>Iniciar Sesión</h2>
+
+@if (ViewData.Keys.Contains("mensaje")) // Si abriendo la Vista existe un ViewData llamado mensaje, 
+                                        //es un error durante el login de microsoft, que he mos controlado en UsuariosController
+{
+    <p style="color: red">
+        @ViewData["mensaje"]
+    </p>
+}
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="Login">
+            <div asp-validation-asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Campo Usuario, se usará para hacer login -->
+            <div class="mb-3">
+                <label asp-for="Usuario" class="form-label"></label>
+                <input asp-for="Usuario" class="form-control" />
+                <span asp-validation-for="Usuario" class="text-danger"></span>
+            </div>
+
+            <!-- Campo Contraseña, se usará para hacer login -->
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <!-- Check para recordar el inicio de sesión -->
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" asp-for="Recuerdame" />
+                <label class="form-check-label" asp-for="Recuerdame"></label>
+            </div>
+
+            <!-- Botón para iniciar sesión -->
+            <button class="btn btn-success mb-2">Iniciar sesión</button>
+
+            <!-- Botón para crear una nueva cuenta -->
+            <a class="btn btn-primary mb-2" asp-action="registro">Crea cuenta</a>
+
+            <!-- Botón para entrar con cuenta Microsoft -->
+            @* <a class="btn btn-success" asp-action="LoginExterno" asp-route-proveedor="Microsoft">
+                Entrar con correo Microsoft
+            </a> *@
+
+            <!-- Botón para solicitar cambio de contraseña por correo -->
+            <a class="btn btn-secondary mb-2" asp-action="passwordOlvidado">He olvidado la contraseña</a>
+
+        </form>
+    </div>
+</div>
+
+<!-- Para habilitar la validación -->
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

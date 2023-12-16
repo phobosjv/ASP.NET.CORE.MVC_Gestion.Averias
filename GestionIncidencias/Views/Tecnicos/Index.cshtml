@@ -1,0 +1,103 @@
+﻿@model TecnicosListadoViewModel
+
+@{
+    ViewData["Title"] = "Listado de Técnicos";
+}
+
+<h2>Servicios Técnicos -  Listado</h2>
+<div class="d-flex justify-content-between">
+    <div>
+        <h5>Empresas asignadas a reparaciones de dispositivos. Estos datos se utilizarán en plantillas de averías.</h5>
+    </div>
+    <div>
+        @if (User.IsInRole(Constantes.RolAdmin))
+        {
+            <a asp-action="Crear" style="width: 140px;" class="btn btn-success mb-3 ms-3">Añadir nuevo ...</a>
+        }
+    </div>
+</div>
+
+@*Animación de Carga*@
+<div class="loading" style="text-align: center;">
+    <div class="hourglass"></div>
+</div>
+
+@if (Model.Tecnicos.Count > 0)
+{
+    <form method="post">
+        <table summary="Tabla Servicios Técnicos" id="tablaTecnicos" class="table table-hover tablaRedimensionable">
+            <thead>
+                <tr>
+                    @if (User.IsInRole(Constantes.RolAdmin))
+                    {
+                        <th style="width: 280px;">Acción</th>
+                    }
+                    <th>Empresa Técnicos</th>
+                    <th>Correo Electrónico</th>
+                    <th>Teléfono</th>
+                    <th>Activo</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var tecnico in Model.Tecnicos)
+                {
+                    <tr>
+                        @if (User.IsInRole(Constantes.RolAdmin))
+                        {
+                            <td>
+                                <button style="width: 100px;" class="btn btn-sm btn-success me-2" asp-action="Editar" formmethod="get" asp-route-Id="@tecnico.Id">
+                                    Editar
+                                </button>
+                                @if (tecnico.Activado)
+                                {
+                                    <button style="width: 100px;" class="btn btn-sm btn-danger me-2" asp-action="Desactivar" asp-route-Id="@tecnico.Id">
+                                        Desactivar
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button style="width: 100px;" class="btn btn-sm btn-success me-2" asp-action="Activar" asp-route-Id="@tecnico.Id">
+                                        Activar
+                                    </button>
+                                }
+                            </td>
+                        }
+                        <td>
+                            @tecnico.NombreEmpresa
+                        </td>
+                        <td>
+                            @tecnico.CorreoElectronico
+                        </td>
+                        <td>
+                            @tecnico.Telefono
+                        </td>
+                        <td>
+                            @(tecnico.Activado ? "Si" : "No")
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </form>
+}
+else
+{
+    <h3 class="mt-3">No se encontraron técnicos dados de alta</h3>
+}
+
+@*DataTables*@
+@section Scripts{
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const mensaje = urlParams.get("mensaje");
+        if (mensaje !== null) {
+            toastr.success(mensaje);
+        }
+        new DataTable('#tablaTecnicos', {
+            language: {
+                url: '/lib/data-tables/json/es-ES.json'
+            },
+            order: [[4, 'desc']]
+        });
+    </script>
+}

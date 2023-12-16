@@ -1,0 +1,98 @@
+﻿@model TiposDispositivosListadoViewModel
+
+@{
+    ViewData["Title"] = "Tipos de Dispositivos";
+}
+
+<partial name="../Dispositivos/_Submenu" model="SubMenuDispositivos.TiposDispositivos" />
+
+<h2>Tipos de Dispositivos -  Listado</h2>
+<div class="d-flex justify-content-between">
+    <div>
+        <h5>Enumera los distintos grupos de dispositivos existentes: Impresora láser, escáner, reciclador......</h5>
+    </div>
+    <div>
+        @if (User.IsInRole(Constantes.RolAdmin))
+        {
+            <a asp-action="Crear" style="width: 140px;" class="btn btn-success mb-3 ms-3">Añadir nuevo ...</a>
+        }
+    </div>
+</div>
+
+@*Animación de Carga*@
+<div class="loading" style="text-align: center;">
+    <div class="hourglass"></div>
+</div>
+
+@if (Model.TiposDispositivos.Count > 0)
+{
+    <form method="post">
+        <table summary="Tabla Tipos Dispositivos" id="tablaTiposDispositivos" class="table table-hover tablaRedimensionable">
+            <thead>
+                <tr>
+                    @if (User.IsInRole(Constantes.RolAdmin))
+                    {
+                        <th style="width: 280px;">Acción</th>
+                    }
+                    <th>Tipo Dispositivo</th>
+                    <th>Activo</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var tipoDispositivo in Model.TiposDispositivos)
+                {
+                    <tr>
+                        @if (User.IsInRole(Constantes.RolAdmin))
+                        {
+                            <td>
+                                <button style="width: 100px;" class="btn btn-sm btn-success me-2" asp-action="Editar" formmethod="get" asp-route-Id="@tipoDispositivo.Id">
+                                    Editar
+                                </button>
+                               
+                                @if (tipoDispositivo.Activo)
+                                {
+                                    <button style="width: 100px;" class="btn btn-sm btn-danger me-2" asp-action="Desactivar" asp-route-Id="@tipoDispositivo.Id">
+                                        Desactivar
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button style="width: 100px;" class="btn btn-sm btn-success me-2" asp-action="Activar" asp-route-Id="@tipoDispositivo.Id">
+                                        Activar
+                                    </button>
+                                }
+                            </td>
+                        }
+                        <td title="Descripción: @tipoDispositivo.Descripcion">
+                            @tipoDispositivo.Titulo
+                        </td>
+                        <td>
+                            @(tipoDispositivo.Activo ? "Si" : "No")
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </form>
+}
+else
+{
+    <h3 class="mt-3">No se encontraron tipos de dispositivos</h3>
+}
+
+@*DataTables*@
+@section Scripts{
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const mensaje = urlParams.get("mensaje");
+        if (mensaje !== null) {
+            toastr.success(mensaje);
+        }
+        new DataTable('#tablaTiposDispositivos', {
+            language: {
+                url: '/lib/data-tables/json/es-ES.json'
+            },
+            order: [[2, 'desc']]
+        });
+    </script>
+}

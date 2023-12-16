@@ -1,0 +1,35 @@
+﻿@inject SignInManager<IdentityUser> SignInManager
+
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item">
+            <span class="nav-link text-light">Hola @User.Identity.Name</span>
+        </li>
+        <li class="nav-item">
+            <form class="form-inline" asp-action="logout" asp-controller="usuarios">
+                <button type="submit" class="nav-link btn btn-link text-light">
+                    <strong>Salir</strong>
+                </button>
+            </form>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link btn btn-link text-light" formmethod="get" asp-controller="Usuarios" asp-action="passwordOlvidado">
+                <strong>Contraseña...</strong>
+            </a>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link dark-text" asp-controller="usuarios" asp-action="Registro">
+                <strong>Nuevo Usuario</strong>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link dark-text" asp-controller="usuarios" asp-action="Login">
+                <strong>Iniciar Sesión</strong>
+            </a>
+        </li>
+    }
+</ul>

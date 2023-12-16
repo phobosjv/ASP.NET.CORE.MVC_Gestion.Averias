@@ -1,0 +1,95 @@
+﻿@model Tecnico
+
+@{
+    ViewData["Title"] = "Nuevo Servicio Técnico";
+}
+
+<h2>Dar de alta nuevo Servicio Técnico</h2>
+<h5>El servicio técnico es la empresa asignada a las reparaciones de los dispositivos. Los datos mostrados a continuación serán utilizados para confeccionar las plantillas de averías.</h5>
+
+<form asp-action="Crear">
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="NombreEmpresa" class="form-label"></label>
+        <input asp-for="NombreEmpresa" class="form-control" />
+        <span asp-validation-for="NombreEmpresa" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Telefono" class="form-label"></label>
+        <input asp-for="Telefono" class="form-control" />
+        <span asp-validation-for="Telefono" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="CorreoPara" class="form-label"></label>
+        <input asp-for="CorreoPara" class="form-control" />
+        <span asp-validation-for="CorreoPara" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="CorreoCopia" class="form-label"></label>
+        <input asp-for="CorreoCopia" class="form-control" />
+        <span asp-validation-for="CorreoCopia" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Asunto" class="form-label"></label>
+        <input title="COMODINES:
+                        Centro: [CENTRO]
+                        Tipo Dispositivo: [TIPO]
+                        Modelo: [MODELO]
+                        Número de Serie: [SN]"
+               asp-for="Asunto"
+               class="form-control" />
+        <span asp-validation-for="Asunto" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Texto" class="form-label"></label>
+        <textarea asp-for="Texto" class="form-control" style="height: 250px"></textarea>
+        <span asp-validation-for="NombreEmpresa" class="text-danger"></span>
+    </div>
+
+    <button class="btn btn-success">Guardar</button>
+    <a class="btn btn-secondary" asp-action="Index">Cancelar</a>
+
+</form>
+
+<div class="d-flex justify-content-evenly mb-2">
+    <div class="d-flex mt-2 mb-2">
+        <strong>Comodines para utilizar en plantillas:</strong>
+    </div>
+</div>
+<div class="d-flex justify-content-evenly mb-2">
+    <div title="Código de la Oficina" class="d-flex mt-2 mb-2">
+        [CENTRO]
+    </div>
+    <div title="Nombre de la Oficina" class="d-flex mt-2 mb-2">
+        [OFICINA]
+    </div>
+    <div title="Dirección de la Oficina" class="d-flex mt-2 mb-2">
+        [DIRECCION]
+    </div>
+    <div title="Teléfono de la Oficina" class="d-flex mt-2 mb-2">
+        [TELEFONO]
+    </div>
+    <div title="Datos adicionales sobre la Oficina, cómo horario especial." class="d-flex mt-2 mb-2">
+        [COMENTARIOS]
+    </div>
+    <div title="Tipo del dispositivo afectado" class="d-flex mt-2 mb-2">
+        [TIPO]
+    </div>
+    <div title="Marca y Modelo del dispositivo" class="d-flex mt-2 mb-2">
+        [MODELO]
+    </div>
+    <div title="Número de serie del dispositivo" class="d-flex mt-2 mb-2">
+        [SN]
+    </div>
+</div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,96 @@
+﻿@model Dispositivo
+
+@{
+    ViewData["Title"] = "Editar Dispositivo";
+}
+
+<h2>Editar Dispositivo</h2>
+<h5>Se editará el dispositivo. Los cambios realizados afectarán al histórico de averías, (S/N, Tipo Dispositivo, Modelo Dispositivo).</h5>
+
+<form asp-action="Editar">
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label asp-for="NumeroSerie" class="form-label"></label>
+        <input asp-for="NumeroSerie" class="form-control" />
+        <span asp-validation-for="NumeroSerie" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Tipo de Dispositivo</label>
+        <select id="SelectTipoDispositivo" asp-items="@(new SelectList(@ViewBag.SelectTiposDispositivos,"Id","Titulo"))" class="form-select"></select>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ModeloDispositivoId" class="form-label"></label>
+        <select id="SelectModeloDispositivo" asp-for="ModeloDispositivoId" asp-items="@(new SelectList(@ViewBag.SelectModeloDispositivos,"Id", "Modelo"))" class="form-select"></select>
+        <span asp-validation-for="ModeloDispositivoId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="OficinaId" class="form-label"></label>
+        <select asp-for="OficinaId" asp-items="@(new SelectList(@ViewBag.SelectOficina,"Id","Codigo"))" class="form-select"></select>
+        <span asp-validation-for="OficinaId" class="text-danger"></span>
+    </div>
+
+    <button class="btn btn-success">Guardar</button>
+    <a class="btn btn-secondary" asp-action="Index">Cancelar</a>
+
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+
+        var listaDispositivos = @Html.Raw(Json.Serialize(ViewBag.SelectModeloDispositivos));
+        //console.log(listaDispositivos);
+
+        var selectElement = document.getElementById("SelectTipoDispositivo");
+        selectElement.value = @ViewBag.TipoDispositivo;
+        llenarSelectModelo(@ViewBag.TipoDispositivo)
+
+        function llenarSelectModelo(tipoSeleccionado){
+            // Borra las opciones existentes en el segundo select
+            var selectModelo = document.getElementById('SelectModeloDispositivo');
+            selectModelo.innerHTML = '';
+            // Filtra la lista de dispositivos por el tipo seleccionado
+            var dispositivosFiltrados = [];
+            for (var i = 0; i < listaDispositivos.length; i++) {
+                var dispositivo = listaDispositivos[i];
+                //console.log("Lista Origina: " + dispositivo.tipoDispositivoId + " - " + dispositivo.modelo);
+                if (dispositivo.tipoDispositivoId == tipoSeleccionado) {
+                    dispositivosFiltrados.push(dispositivo);
+                    //console.log("Agregado");
+                }
+                else
+                {
+                    //console.log("Descartado");
+                }
+            }
+            console.log(dispositivosFiltrados);
+            // Agrega las opciones filtradas al segundo select
+            dispositivosFiltrados.forEach(function (dispositivo) {
+                var option = document.createElement('option');
+                option.value = dispositivo.id;
+                option.textContent = dispositivo.modelo;
+                selectModelo.appendChild(option);
+            });
+        }
+
+        $(function(){
+            $("#SelectTipoDispositivo").change(async function(){
+                const valorSeleccionado = $(this).val();
+
+                //console.log(valorSeleccionado);
+
+                llenarSelectModelo(valorSeleccionado);
+
+            })
+        })
+    </script>
+
+}

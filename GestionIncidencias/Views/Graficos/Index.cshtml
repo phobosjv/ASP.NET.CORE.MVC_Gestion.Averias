@@ -1,0 +1,197 @@
+﻿@{
+    ViewData["Title"] = "Averías - Gráficos";
+}
+
+<partial name="../Home/_Submenu" model="SubMenuIncidencias.Graficos" />
+
+<div class="row mt-2 mb-5">
+    <div class="col">
+        <canvas id="graficoLineas"></canvas>
+    </div>
+</div>
+<div class="row mb-5">
+    <div class="col-lg-3 col-md-8">
+        <canvas id="graficoDonutUsuarios"></canvas>
+    </div>
+    <div class="col-lg-7 col-md-12">
+        <canvas id="graficoBarrasOficinas"></canvas>
+    </div>
+    
+</div>
+
+<script src="~/lib/chartjs/chart.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        cargarGraficoLineas();
+        cargarGraficoDonutUsuarios();
+        cargarGraficoBarrasOficinas();
+    });
+
+    async function cargarGraficoLineas() {
+        const graficoLineas = document.getElementById('graficoLineas');
+
+        //console.log('Graficos/ObtenerIncidenciasGraficoLineas?start=' + inicioUltimosDoceMeses() + '&end=' + finUltimosDoceMeses());
+        const respuesta = await fetch('Graficos/ObtenerIncidenciasGraficoLineas?start=' + inicioUltimosDoceMeses() + '&end=' + finUltimosDoceMeses());
+        //console.log(respuesta)
+        const json = await respuesta.json();
+        //console.log(json);
+
+        var objetoGraficoLineas = new Chart(graficoLineas, {
+            type: 'line',
+            data: {
+                labels: generarUltimosDoceMeses(),
+                datasets: json
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            precision: 0
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Averías abiertas los últimos doce meses, por categoría.',
+                        color: 'black',
+                        position: 'top',
+                        align: 'center',
+                        font: {
+                            weight: 'bold',
+                            size: 16
+                        },
+                        padding: 8,
+                        fullSize: true,
+                    },
+                    legend: {
+                        position: "right",
+                        align: "middle"
+                    }
+                }
+            }
+        });
+        objetoGraficoLineas.update();
+    }
+
+    async function cargarGraficoDonutUsuarios() {
+        const graficoDonutUsuarios = document.getElementById('graficoDonutUsuarios');
+
+        const respuesta = await fetch('Graficos/ObtenerIncidenciasGraficoUsuarios');
+
+        const json = await respuesta.json();
+
+        var objetoGraficoDonutUsuarios = new Chart(graficoDonutUsuarios, {
+            type: 'doughnut',
+            data: json,
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Averías abiertas, por usuario.',
+                        color: 'black',
+                        position: 'top',
+                        align: 'center',
+                        font: {
+                            weight: 'bold',
+                            size: 16
+                        },
+                        padding: 8,
+                        fullSize: true,
+                    }
+                }
+            }
+        });
+        objetoGraficoDonutUsuarios.update();
+    }
+
+    async function cargarGraficoBarrasOficinas() {
+        const graficoBarrasOficinas = document.getElementById('graficoBarrasOficinas');
+
+        const respuesta = await fetch('Graficos/ObtenerIncidenciasGraficoOficinas');
+
+        const json = await respuesta.json();
+
+        var objetoGraficoBarrasOficinas = new Chart(graficoBarrasOficinas, {
+            type: 'bar',
+            data: json,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            precision: 0
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Top 10 - Averías por Oficina',
+                        color: 'black',
+                        position: 'top',
+                        align: 'center',
+                        font: {
+                            weight: 'bold',
+                            size: 16
+                        },
+                        padding: 8,
+                        fullSize: true,
+                    },
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+        objetoGraficoBarrasOficinas.update();
+    }
+
+    function inicioUltimosDoceMeses() {
+        var hoy = new Date();
+        var mes = hoy.getMonth() - 11;
+        var anyo = hoy.getFullYear();
+        if (mes <= 0) {
+            mes += 12;
+            anyo -= 1;
+        }
+        return `${anyo}-${mes.toString().padStart(2, '0')}-01`;
+    }
+
+    function finUltimosDoceMeses() {
+        var fecha = new Date();
+        fecha.setDate(0); // set the day to 0 will give us the last day of the previous month
+        var anyo = fecha.getFullYear();
+        var mes = fecha.getMonth() + 1; // JavaScript months are 0-based, so we add 1
+        var dia = fecha.getDate();
+
+        // padStart will ensure we have 2 digits for month and day
+        return `${anyo}-${mes.toString().padStart(2, '0')}-${dia.toString().padStart(2, '0')}`;
+
+    }
+
+    function generarUltimosDoceMeses() {
+        var hoy = new Date();
+        var meses = [];
+        for (var i = 0; i < 12; i++) {
+            var mes = hoy.getMonth() - 11 + i;
+            var anyo = hoy.getFullYear();
+            if (mes <= 0) {
+                mes += 12;
+                anyo -= 1;
+            }
+            meses.push(`${anyo}-${mes.toString().padStart(2, '0')}`);
+        }
+        return meses;
+    }
+</script>
+
+
+@*Animación de Carga*@
+<div class="loading" style="text-align: center;">
+    <div class="hourglass"></div>
+</div>

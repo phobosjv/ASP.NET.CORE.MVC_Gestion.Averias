@@ -1,0 +1,35 @@
+﻿@model TipoDispositivo
+
+@{
+    ViewData["Title"] = "Editar Tipo de Dispositivo";
+}
+
+<h2>Modificar Tipo Dispositivo</h2>
+<h5>Los cambios aquí realizados se reflejarán en los modelos de dispositivo relacionados.</h5>
+
+
+
+<form asp-action="Editar">
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="Titulo" class="form-label"></label>
+        <input asp-for="Titulo" class="form-control" />
+        <span asp-validation-for="Titulo" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Descripcion" class="form-label"></label>
+        <input asp-for="Descripcion" class="form-control" />
+        <span asp-validation-for="Descripcion" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Guardar</button>
+    <a class="btn btn-secondary" asp-action="Index">Cancelar</a>
+
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

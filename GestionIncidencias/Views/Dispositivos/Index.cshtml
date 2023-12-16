@@ -1,0 +1,118 @@
+﻿@model DispositivosListadoViewModel
+
+@{
+    ViewData["Title"] = "Dispositivos";
+}
+
+<partial name="_Submenu" model="SubMenuDispositivos.Dispositivos" />
+
+<h2>Dispositivos -  Listado</h2>
+<div class="d-flex justify-content-between">
+    <div>
+        <h5>Se especifica modelo, num. serie y centro. Modelos con ubicación 'global': Centro='0000' y S/N='0'.</h5>
+    </div>
+    <div>
+        @if (User.IsInRole(Constantes.RolAdmin))
+        {
+            <a asp-action="Crear" style="width: 140px;" class="btn btn-success mb-3 ms-3">Añadir nuevo ...</a>
+        }
+    </div>
+</div>
+
+@*Animación de Carga*@
+<div class="loading" style="text-align: center;">
+    <div class="hourglass"></div>
+</div>
+
+@if (Model.Dispositivos.Count > 0)
+{
+    <form method="post">
+        <table summary="Tabla Dispositivos Inventario" id="tablaDispositivos" class="table table-hover tablaRedimensionable">
+            <thead>
+                <tr>
+                    @if (User.IsInRole(Constantes.RolAdmin))
+                    {
+                        <th style="width: 300px;">Acción</th>
+                    }
+                    <th>Marca y Modelo</th>
+                    <th>Tipo Dispositivo</th>
+                    <th>Num. Serie</th>
+                    <th>Centro</th>
+                    <th>Activo</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var dispositivo in Model.Dispositivos)
+                {
+                    <tr>
+                        @if (User.IsInRole(Constantes.RolAdmin))
+                        {
+                            <td>
+                                <button style="width: 100px;" class="btn btn-sm btn-success me-2" asp-action="Editar" formmethod="get" asp-route-Id="@dispositivo.Id">
+                                    Editar
+                                </button>
+                                @if (dispositivo.Activo)
+                                {
+                                    <button style="width: 100px;" class="btn btn-sm btn-danger me-2" asp-action="Desactivar" asp-route-Id="@dispositivo.Id">
+                                        Desactivar
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button style="width: 100px;" class="btn btn-sm btn-success me-2" asp-action="Activar" asp-route-Id="@dispositivo.Id">
+                                        Activar
+                                    </button>
+                                }
+                            </td>
+                        }
+                        @{
+                            List<TipoDispositivo> listaTiposDispositivos = ViewBag.TD;
+                            TipoDispositivo tipoDispositivo = listaTiposDispositivos.Where(td => td.Id == dispositivo.ModeloDispositivo.TipoDispositivoId).FirstOrDefault();
+                        }
+                        <td title="Descripción: @dispositivo.ModeloDispositivo.Descripcion">
+                            @dispositivo.ModeloDispositivo.Marca - @dispositivo.ModeloDispositivo.Modelo
+                        </td>
+                        <td title="Descripción: @tipoDispositivo.Descripcion">
+                            @tipoDispositivo.Titulo
+                        </td>
+                        <td>
+                            @dispositivo.NumeroSerie
+                        </td>
+                        <td title="@dispositivo.Oficina.Nombre">
+                            @dispositivo.Oficina.Codigo
+                        </td>
+                        <td>
+                            @(dispositivo.Activo ? "Si" : "No")
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </form>
+}
+else
+{
+    <h3 class="mt-3">No se encontraron dispositivos</h3>
+}
+
+@*DataTables*@
+@section Scripts{
+    <script>
+
+        // Notificación
+        const urlParams = new URLSearchParams(window.location.search);
+        const mensaje = urlParams.get("mensaje");
+        if (mensaje !== null) {
+            toastr.success(mensaje);
+        }
+
+        // DataTables
+        new DataTable('#tablaDispositivos', {
+            language: {
+                url: '/lib/data-tables/json/es-ES.json'
+            },
+            order: [[5, 'desc']]
+        });
+
+    </script>
+}

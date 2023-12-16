@@ -1,0 +1,56 @@
+﻿@model RegistroViewModel
+
+@{
+    ViewData["Title"] = "Registro"; // Muestra /Registro en la barra de URL
+}
+
+<!-- Parte Visual del Formulario de Registro de Usuario -->
+
+<h2>Registro Nuevo Usuario</h2> 
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="Registro">
+            <!-- Para añadir la validación a la vista -->
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Campo Nombre y Apellidos -->
+            <div class="mb-3">
+                <label asp-for="Usuario" class="form-label"></label>
+                <input asp-for="Usuario" class="form-control" />
+                <span asp-validation-for="Usuario" class="text-danger"></span>
+            </div>
+
+            <!-- Dirección de Correo Electrónico -->
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <!-- Para añadir la validación a la vista -->
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <!-- Botón Registrar Usuario -->
+            <button class="btn btn-success">Registrar usuario</button>
+
+            <!-- Botón Login con Usuario Existente -->
+            <a class="btn btn-secondary" asp-action="login">Ya tengo usuario</a>
+
+            <!-- Botón Registrar con Microsoft -->
+            <a class="btn btn-success" asp-action="LoginExterno" asp-route-proveedor="Microsoft">
+                Entrar con correo Microsoft
+            </a>
+
+        </form>
+    </div>
+</div>
+
+<!-- Script necesario para las validaciones -->
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
