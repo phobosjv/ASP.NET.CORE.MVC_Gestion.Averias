@@ -5,7 +5,7 @@
 
 Release : Primera versión de producción Gestión de Averías 1.0.0
 
-Se adjunta versión compilada GestionAverias.zip
+Se adjunta versión compilada, comprimida en zip: 
 [publish.zip](https://github.com/phobosjv/ASP.NET.CORE.MVC_Gestion.Averias/files/13693217/publish.zip)
 - Preparada para ejecutarse sobre IIS. Path por defecto "C:\IIS\GestionAverias\"
 - Editar web.config para personalizar los token de microsoft y otros parámetros.
